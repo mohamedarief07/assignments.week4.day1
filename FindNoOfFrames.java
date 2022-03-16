@@ -14,6 +14,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class FindNoOfFrames {
 
 	public static void main(String[] args) throws InterruptedException {
+		int count = 0;
 
 		WebDriverManager.chromedriver().setup();
 		ChromeDriver driver = new ChromeDriver();
@@ -22,10 +23,17 @@ public class FindNoOfFrames {
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
 
-		List<WebElement> findNoOfFrame = driver.findElements(By.tagName("iframe"));
-		int size = findNoOfFrame.size();
-		System.out.println(size);
+		List<WebElement> outerFrame = driver.findElements(By.tagName("iframe"));
+		count = count + outerFrame.size();
+		System.out.println("Before For Loop" + count);
+		for (int i = 0; i < outerFrame.size(); i++) {
+			driver.switchTo().frame(i);
+			List<WebElement> InnerFrame = driver.findElements(By.tagName("iframe"));
+			count = count + InnerFrame.size();
+			driver.switchTo().defaultContent();
 
+		}
+
+		System.out.println("Total Number of iframe present in the screen :"  +count);
 	}
-
 }
